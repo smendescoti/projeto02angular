@@ -1,0 +1,168 @@
+<div class="card">
+    <div class="card-body">
+        <div>
+            <h4>Consulta de Contatos</h4>
+            <hr />
+
+            <div *ngIf="mensagem_exclusao" class="alert alert-secondary mt-4">
+                <strong>{{mensagem_exclusao}}</strong>
+            </div>
+
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome do Contato</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th width="160">Operações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of contatos">
+                        <td>{{item.nome}}</td>
+                        <td>{{item.email}}</td>
+                        <td>{{item.telefone}}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" 
+                                data-bs-target="#janela_edicao"
+                                data-bs-toggle="modal"
+                                (click)="consultarContato(item.idContato)">
+                                Editar
+                            </button>
+                            &nbsp;
+                            <button class="btn btn-danger btn-sm" 
+                                data-bs-target="#janela_exclusao"
+                                data-bs-toggle="modal"
+                                (click)="obterContato(item)">
+                                Excluir
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            Quantidade de contatos: {{contatos.length}}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!-- janela para edição da tarefa -->
+<div id="janela_edicao" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Atualizar Contato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form [formGroup]="formEdicaoContato" (ngSubmit)="onSubmit()" autocomplete="off">
+
+                    <!-- campo oculto -->
+                    <input type="hidden" formControlName="idContato"/>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Nome do Contato:</label>
+                            <input type="text" class="form-control" formControlName="nome" />
+                            <div class="text-danger" *ngIf="form.nome.touched && form.nome.invalid">
+                                <span *ngIf="form.nome.errors.required">
+                                    Por favor, informe o nome do contato.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Telefone:</label>
+                            <input type="text" class="form-control" formControlName="telefone" />
+                            <div class="text-danger" *ngIf="form.telefone.touched && form.telefone.invalid">
+                                <span *ngIf="form.telefone.errors.required">
+                                    Por favor, informe o telefone do contato.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Email:</label>
+                            <input type="text" class="form-control" formControlName="email" />
+                            <div class="text-danger" *ngIf="form.email.touched && form.email.invalid">
+                                <span *ngIf="form.email.errors.required">
+                                    Por favor, informe o telefone do contato.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Foto:</label>
+                            <input type="text" class="form-control" formControlName="foto" />
+                            <div class="text-danger" *ngIf="form.foto.touched && form.foto.invalid">
+                                <span *ngIf="form.foto.errors.required">
+                                    Por favor, informe a foto do contato.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <input type="submit" value="Salvar Alterações" class="btn btn-primary"
+                        [disabled]="!formEdicaoContato.valid" />
+
+                </form>
+
+                <div *ngIf="mensagem_edicao" class="alert alert-secondary mt-4">
+                    <strong>{{mensagem_edicao}}</strong>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- janela para exclusão da tarefa -->
+<div id="janela_exclusao" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir Contato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p>
+                    Deseja realmente excluir o contato selecionado?
+                </p>
+
+                <table class="table">
+                    <tr>
+                        <td>Nome do Contato:</td>
+                        <td>{{contato.nome}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td>{{contato.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Telefone:</td>
+                        <td>{{contato.telefone}}</td>
+                    </tr>
+                </table>
+
+                <button class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                    (click)="excluirContato()">
+                    Confirmar Exclusão
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
